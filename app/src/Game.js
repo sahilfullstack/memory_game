@@ -35,8 +35,29 @@ function Game({input_game}) {
                 showCards([]);
           });
       }
+      var startTimer = () => {
+        let id = sessionStorage.getItem('file_id');
+        fetch('http://localhost:3001/game/startTimer/'+id, {
+            method: 'PUT',
+            body: null,
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        .then(response => {
+              return response.json();
+            })
+          .then(data => {
+                console.log(data);
+          });
+      }
 
      var openCard = (card) => {
+        let firstTime = sessionStorage.getItem('firstTime')
+        if(! firstTime) {
+            startTimer();
+            sessionStorage.setItem('firstTime', true);
+        }
         if(show.length < 2) {
             show.push(card)
             showCards([...show]);

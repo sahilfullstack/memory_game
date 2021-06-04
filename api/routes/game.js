@@ -6,6 +6,9 @@ module.exports = function(app) {
   app.route('/game/start')
     .get(game.start);
 
+  app.route('/game/startTimer/:id')
+    .put(game.startTimer);
+
     
   app.route('/game/:id')
     .get(game.getGame);

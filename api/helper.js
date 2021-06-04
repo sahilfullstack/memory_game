@@ -37,7 +37,8 @@ exports.newGameObject = function(level) {
     let arr = generateCards(level);
     return {
         level: level,
-        started_at: new Date,
+        started_at: null,
+        created_at: new Date,
         updated_at: new Date,
         error_score: 0,
         initial_cards: arr,

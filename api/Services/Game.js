@@ -73,3 +73,18 @@ exports.getGame = function(id, callback) {
         callback(helper.transformGame(id, gameObject));    
     });
 };
+
+exports.startTimer = function(id, callback) {
+    fs.readFile(`storage/${id}.json`, 'utf-8', (err, data) => {
+        if (err) {
+            throw err;
+        }    
+        
+        const gameObject = JSON.parse(data.toString());
+
+        gameObject.started_at = new Date;
+        gameObject.updated_at = new Date;
+
+        writeToFile(id, gameObject, callback);
+    });
+};

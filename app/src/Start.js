@@ -20,9 +20,9 @@ function Start({gameStarted}) {
           <h2>Please select a difficulty;</h2>
       </div>
     <div className="button-container">
-        <a href="#" onClick={()=>startGame("easy")} className="button1 left-button">Easy</a>
-        <a href="#" onClick={()=>startGame("medium")} className="button1">Medium</a>
-        <a href="#" onClick={()=>startGame("hard")}  className="button1">Hard</a>
+        <a href="#" onClick={()=>startGame("easy")} className="level_button">Easy</a>
+        <a href="#" onClick={()=>startGame("medium")} className="level_button">Medium</a>
+        <a href="#" onClick={()=>startGame("hard")}  className="level_button">Hard</a>
     </div>
 
     </div>

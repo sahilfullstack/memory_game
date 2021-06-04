@@ -13,9 +13,14 @@ exports.start = function(req, res) {
     });
 };
 
+exports.startTimer = function(req, res) {
+    game.startTimer(req.params.id, (response)=> {
+        res.json(response);
+    });
+};
+
 exports.move = function(req, res) {  
-    console.log(req.body)
-    game.move(req.params.id, req.body, (response) => {
+     game.move(req.params.id, req.body, (response) => {
         res.json(response);
     });
 };
