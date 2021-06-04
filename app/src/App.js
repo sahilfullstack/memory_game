@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Start from './Start';
 import Game from './Game';

@@ -1,9 +1,16 @@
 import * as React from 'react';
+import { CardColumns, Card } from 'react-bootstrap';
+import Timer from './Timer';
 
 function Game({input_game}) {
     const [game, setGame] = React.useState({game: input_game});
     const [show, showCards] = React.useState([]);
+    const [counter, setCounter] = React.useState(0);
 
+    var setTime = (time) => {
+        setCounter(time && (new Date - new Date(time))/1000 > 0 ? 
+                        (new Date - new Date(time))/1000 : 0);
+    }
     React.useEffect(() => {
         fetch('http://localhost:3001/game/'+sessionStorage.getItem("file_id"))
         .then(response => {
@@ -13,6 +20,7 @@ function Game({input_game}) {
             setGame({
                 game: data
             })
+            setTime(data.start_time)
           });
       }, []);
 
@@ -48,7 +56,7 @@ function Game({input_game}) {
               return response.json();
             })
           .then(data => {
-                console.log(data);
+                setTime(data.start_time)
           });
       }
 
@@ -71,37 +79,46 @@ function Game({input_game}) {
             }
         }        
     }
+   
 
   return (
   <div className="game">
-      <p className="square-block">TIME ELAPSED - {game.game && game.game.time_elapsed }</p>
-      <p  className="square-block">ERROR SCORE - {game.game && game.game.error_score}</p>
+        
+        <div className={'button-container'}>
+            <Timer time={counter} />
+            <p  className="square-block">ERROR SCORE - {game.game && game.game.error_score}</p>
+        </div>
+
       <br />
      
-        <div className="cards-container">
+      <CardColumns style={{ padding: '2%' }}>
         {
             game.game && game.game.cards.map((card, index) => {                                                   
                 return ( 
                     card == "solved" ?
-                    <div key={index} className="card not-clickable">
-                    <div className="container">
-                        <p>{
-                            'DONE'                                
-                        }</p> 
-                    </div>
-                </div>:
-                    <div key={index} className={"card"} onClick={() => openCard(index)}>
-                        <div className="container">
-                            <p>{
-                                show.indexOf(index) > -1 ? card : 'BACK'                                
-                            }</p> 
-                        </div>
-                    </div>
+                        <Card bg={'light'}  className="box text-center" style={{ width: '18rem', height: '18rem' }} text={'dark'}>                          
+                            <Card.Header>DONE</Card.Header>
+                                <Card.Body>
+                                <Card.Text>
+                                    Go for other cards.
+                                </Card.Text>
+                                </Card.Body>
+                        </Card>                   
+                :
+                    
+                    <Card bg={show.indexOf(index) > -1 ? 'primary' :'success'} style={{ width: '18rem', height: '18rem' }}  onClick={() => openCard(index)}  className=" box text-center" text={'dark'}>                          
+                        <Card.Header>{ show.indexOf(index) > -1 ? 'Take a look' : 'OPEN'}</Card.Header>
+                            <Card.Body>
+                            <Card.Text>
+                                { show.indexOf(index) > -1 ? card : 'Choose Me'}
+                            </Card.Text>
+                            </Card.Body>
+                    </Card>               
                 );
             })
-        }          
-        </div>
+        }                         
 
+    </CardColumns>
     </div>
   );
 }
