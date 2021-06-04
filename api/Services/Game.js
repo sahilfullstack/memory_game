@@ -11,15 +11,16 @@ const LEVELS = {
 function writeToFile(id, gameObject, callback) {
     // convert JSON object to string
     const data = JSON.stringify(gameObject);
+    if(id) {
+        // write JSON string to a file
+        fs.writeFile(`storage/${id}.json`, data, (err) => {
+            if (err) {
+                throw err;
+            }
 
-    // write JSON string to a file
-    fs.writeFile(`storage/${id}.json`, data, (err) => {
-        if (err) {
-            throw err;
-        }
-
-        callback(helper.transformGame(id, gameObject));
-    });
+            callback(helper.transformGame(id, gameObject));
+        });
+    }
 }
 
 exports.start = function(level, callback) {

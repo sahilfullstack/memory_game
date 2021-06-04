@@ -6,11 +6,13 @@ function Game({input_game}) {
     const [game, setGame] = React.useState({game: input_game});
     const [show, showCards] = React.useState([]);
     const [counter, setCounter] = React.useState(0);
+    const [win, setWin] = React.useState(sessionStorage.getItem("win") ? true :false);
 
     var setTime = (time) => {
         setCounter(time && (new Date - new Date(time))/1000 > 0 ? 
                         (new Date - new Date(time))/1000 : 0);
     }
+
     React.useEffect(() => {
         fetch('http://localhost:3001/game/'+sessionStorage.getItem("file_id"))
         .then(response => {
@@ -23,6 +25,22 @@ function Game({input_game}) {
             setTime(data.start_time)
           });
       }, []);
+
+    
+    var checkWin = (data) => {
+        let win  = true;
+        if( data && data.cards) {
+            data.cards.map((item, index) => {
+                if(item != "solved") {
+                    win = false;
+                }
+            })
+
+            if(win) {
+                setWin(true);
+            }
+        }
+    }
 
     var move = (body) => {
         let id = sessionStorage.getItem('file_id');
@@ -41,8 +59,10 @@ function Game({input_game}) {
                     game: data
                 })
                 showCards([]);
+                checkWin(data);
           });
       }
+
       var startTimer = () => {
         let id = sessionStorage.getItem('file_id');
         fetch('http://localhost:3001/game/startTimer/'+id, {
@@ -79,34 +99,34 @@ function Game({input_game}) {
             }
         }        
     }
-   
-
+  var restartGame = () => {
+        sessionStorage.clear();
+        window.location.reload();
+    }
   return (
   <div className="game">
-        
-        <div className={'button-container'}>
-            <Timer time={counter} />
-            <p  className="square-block">ERROR SCORE - {game.game && game.game.error_score}</p>
-        </div>
-
-      <br />
-     
+    <div className={'button-container'}>
+        <Timer time={counter} />
+        <p  className="square-block">ERROR SCORE - {game.game && game.game.error_score}</p>
+    </div>
+    <br />
+    {
+        win && <div><h1 style={{ textAlign: 'center' }}>You Won !!!</h1> <a href="#" onClick={()=>restartGame()}>Restart</a></div>
+    }
       <CardColumns style={{ padding: '2%' }}>
         {
             game.game && game.game.cards.map((card, index) => {                                                   
                 return ( 
                     card == "solved" ?
-                        <Card bg={'light'}  className="box text-center" style={{ width: '18rem', height: '18rem' }} text={'dark'}>                          
-                            <Card.Header>DONE</Card.Header>
-                                <Card.Body>
-                                <Card.Text>
-                                    Go for other cards.
-                                </Card.Text>
-                                </Card.Body>
-                        </Card>                   
-                :
-                    
-                    <Card bg={show.indexOf(index) > -1 ? 'primary' :'success'} style={{ width: '18rem', height: '18rem' }}  onClick={() => openCard(index)}  className=" box text-center" text={'dark'}>                          
+                    <Card key={index} bg={'light'}  className="box text-center" style={{ width: '18rem', height: '18rem' }} text={'dark'}>                          
+                        <Card.Header>DONE</Card.Header>
+                            <Card.Body>
+                            <Card.Text>
+                                Go for other cards.
+                            </Card.Text>
+                            </Card.Body>
+                    </Card> :                    
+                    <Card  key={index} bg={show.indexOf(index) > -1 ? 'primary' :'success'} style={{ width: '18rem', height: '18rem' }}  onClick={() => openCard(index)}  className=" box text-center" text={'dark'}>                          
                         <Card.Header>{ show.indexOf(index) > -1 ? 'Take a look' : 'OPEN'}</Card.Header>
                             <Card.Body>
                             <Card.Text>
@@ -116,8 +136,7 @@ function Game({input_game}) {
                     </Card>               
                 );
             })
-        }                         
-
+        }
     </CardColumns>
     </div>
   );
