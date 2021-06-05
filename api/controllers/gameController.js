@@ -1,5 +1,5 @@
 'use strict';
-var game = require('../services/game');
+var game = require('../services/Game');
 
 exports.getGame = function(req, res) {
     game.getGame(req.params.id, (response)=> {
