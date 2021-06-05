@@ -1,4 +1,5 @@
 import * as React from 'react';
+import config from './config.json';
 
 function Timer({time}) {    
     var setTime = (time) => {
@@ -8,7 +9,7 @@ function Timer({time}) {
    
     const [counter, setCounter] = React.useState(time);
     React.useEffect(() => {
-        fetch('http://localhost:3001/game/'+sessionStorage.getItem("file_id"))
+        fetch(config.serverUrl+'/game/'+sessionStorage.getItem("file_id"))
         .then(response => {
           return response.json();
         })

@@ -1,5 +1,5 @@
 const LEVEL_CARD_COUNT = {
-    'easy' : 2,
+    'easy' : 5,
     'medium': 10,
     'hard'  : 25
 }

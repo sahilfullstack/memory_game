@@ -1,7 +1,9 @@
+import config from './config.json';
+
 function Start({gameStarted}) {
 
     var startGame = (level) => {
-        fetch('http://localhost:3001/game/start?level='+level)
+        fetch(config.serverUrl+'/game/start?level='+level)
         .then(response => {
               return response.json();
             })

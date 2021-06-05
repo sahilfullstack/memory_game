@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CardColumns, Card } from 'react-bootstrap';
 import Timer from './Timer';
+import config from './config.json';
 
 function Game({input_game}) {
     const [game, setGame] = React.useState({game: input_game});
@@ -14,7 +15,7 @@ function Game({input_game}) {
     }
 
     React.useEffect(() => {
-        fetch('http://localhost:3001/game/'+sessionStorage.getItem("file_id"))
+        fetch(config.serverUrl+'/game/'+sessionStorage.getItem("file_id"))
         .then(response => {
           return response.json();
         })
@@ -44,7 +45,7 @@ function Game({input_game}) {
 
     var move = (body) => {
         let id = sessionStorage.getItem('file_id');
-        fetch('http://localhost:3001/game/move/'+id, {
+        fetch(config.serverUrl+'/game/move/'+id, {
             method: 'PUT',
             body: JSON.stringify(body),
             headers: {
@@ -65,7 +66,7 @@ function Game({input_game}) {
 
       var startTimer = () => {
         let id = sessionStorage.getItem('file_id');
-        fetch('http://localhost:3001/game/startTimer/'+id, {
+        fetch(config.serverUrl+'/game/startTimer/'+id, {
             method: 'PUT',
             body: null,
             headers: {
