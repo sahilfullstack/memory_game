@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CardColumns, Card } from 'react-bootstrap';
-import Timer from './Timer';
+import { Timer } from './Timer';
 import config from './config.json';
 
 function Game({input_game}) {
@@ -10,8 +10,8 @@ function Game({input_game}) {
     const [win, setWin] = React.useState(sessionStorage.getItem("win") ? true :false);
 
     var setTime = (time) => {
-        setCounter(time && (new Date - new Date(time))/1000 > 0 ? 
-                        (new Date - new Date(time))/1000 : 0);
+        setCounter(counter => counter + (time && Math.round((new Date - new Date(time))/1000) > 0 ? 
+                        Math.round((new Date - new Date(time))/1000) : 1));
     }
 
     React.useEffect(() => {
@@ -23,7 +23,10 @@ function Game({input_game}) {
             setGame({
                 game: data
             })
-            setTime(data.start_time)
+            if(data.start_time != null) {
+                setTime(data.start_time)                
+            }
+
           });
       }, []);
 
@@ -107,7 +110,7 @@ function Game({input_game}) {
   return (
   <div className="game">
     <div className={'button-container'}>
-        <Timer time={counter} />
+        <Timer time={counter}/>
         <p  className="square-block">ERROR SCORE - {game.game && game.game.error_score}</p>
     </div>
     <br />
@@ -120,7 +123,7 @@ function Game({input_game}) {
             game.game && game.game.cards.map((card, index) => {                                                   
                 return ( 
                     card == "solved" ?
-                    <Card key={index} bg={'light'}  className="box text-center" style={{ width: '18rem', height: '18rem' }} text={'dark'}>                          
+                    <Card key={index} bg={'light'}  className="box text-center" style={{ width: '18rem', height: '18rem', visibility: "hidden" }} text={'dark'}>                          
                         <Card.Header>DONE</Card.Header>
                             <Card.Body>
                             <Card.Text>

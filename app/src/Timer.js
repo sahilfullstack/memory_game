@@ -1,30 +1,26 @@
 import * as React from 'react';
-import config from './config.json';
 
-function Timer({time}) {    
-    var setTime = (time) => {
-        setCounter(time && (new Date - new Date(time))/1000 > 0 ? 
-                        (new Date - new Date(time))/(1000*60) : 0);
+export const Timer = React.memo((props)=>{    
+  const [counter, setCounter] = React.useState(0); 
+ 
+  React.useEffect(() => {
+    if(counter == 0) {
+      setCounter(props.time)
+    }  
+  }, [props.time]);
+
+  React.useEffect(() => {
+    let interval = null;
+    if(counter > 0) {
+      interval = setInterval(() => {
+        setCounter(counter => counter + 1)
+      }, 1000)
     }
-   
-    const [counter, setCounter] = React.useState(time);
-    React.useEffect(() => {
-        fetch(config.serverUrl+'/game/'+sessionStorage.getItem("file_id"))
-        .then(response => {
-          return response.json();
-        })
-          .then(data => {          
-            setTime(data.start_time)
-          });
-      }, []);
-    React.useEffect(() => {
-        counter > 0 && setInterval(() => setCounter(counter + 1), 1000*60);
-      }, [counter]);
 
+    return () => clearInterval(interval);
+  }, [counter]);
 
   return (
-    <p className="square-block">TIME ELAPSED - {Number((counter).toFixed(1)) } minutes</p>
+    <p className="square-block">TIME ELAPSED - {counter}s</p>
   );
-}
-
-export default Timer;
+});
