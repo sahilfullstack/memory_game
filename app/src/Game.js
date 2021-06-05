@@ -111,7 +111,8 @@ function Game({input_game}) {
     </div>
     <br />
     {
-        win && <div><h1 style={{ textAlign: 'center' }}>You Won !!!</h1> <a href="#" onClick={()=>restartGame()}>Restart</a></div>
+        win && <div className={'button-container'}><h1 style={{ textAlign: 'center' }}>You Won !!!</h1> 
+        <a href="#" onClick={()=>restartGame()} className="level_button restart">Restart</a></div>
     }
       <CardColumns style={{ padding: '2%' }}>
         {
